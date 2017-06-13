@@ -1,0 +1,36 @@
+camera
+position 0 0 5
+direction 0 0 -1
+near 1
+far 10
+left -0.5
+right .5
+top .5
+bottom -.5
+
+spheres 3
+position -1 0 0
+radius 1
+ambient 0 .2 0
+diffuse 0 .8 0
+specular 1 1 1
+shininess 10
+
+position 1 0 0
+radius .5
+ambient 0 0 .2
+diffuse 0 0 .8
+specular 1 1 1
+shininess 10
+
+position 0 -5 0 
+radius 10
+ambient .2 0 0 
+diffuse .8 0 0 
+specular 1 1 1
+shininess 10
+
+lights 1
+position 0 5 5
+color 1 1 1
+k 0
