@@ -98,15 +98,12 @@ void parse_sphere_data(ifstream *parser, sphere *s){
 		}
 		if(buf.find("ambient") != string::npos){
 			ss>>type>>s->m.ambient.r>>s->m.ambient.g>>s->m.ambient.b;
-      cerr<<"ambient"<<s->m.ambient.r<<", "<<s->m.ambient.g<<", "<<s->m.ambient.b<<endl;
 		}
 		if(buf.find("diffuse") != string::npos){
 			ss>>type>>s->m.diffuse.r>>s->m.diffuse.g>>s->m.diffuse.b;
-      cerr<<"diffuse"<<s->m.diffuse.r<<", "<<s->m.diffuse.g<<", "<<s->m.diffuse.b<<endl;
 		}
 		if(buf.find("specular") != string::npos){
 			ss>>type>>s->m.specular.r>>s->m.specular.g>>s->m.specular.b;
-      cerr<<"specular"<<s->m.specular.r<<", "<<s->m.specular.g<<", "<<s->m.specular.b<<endl;
 		}
 		if(buf.find("shininess") != string::npos){
 			ss>>type>>s->m.shine;
@@ -228,10 +225,10 @@ float distance(const float p1[], const float p2[]){
 
 bool intersect(const ray r, const sphere s, float pointHit[], float normalHit[], float *minDistance){
   float t0, t1;
-  
+
   float L[3] = {s.position[0] - r.origin[0], s.position[1] - r.origin[1], s.position[2] - r.origin[2]};
  float tca = dotProduct(L, r.direction, 3);
-   
+
   float d2 = dotProduct(L, L, 3) - pow(tca, 2);
 
   if(d2 > pow(s.radius, 2)){
@@ -266,19 +263,6 @@ bool intersect(const ray r, const sphere s, float pointHit[], float normalHit[],
       normalize(normalHit);
     }
     if(t0 >= 0){
-  //     cerr<<"sphere position: "<<s.position[0]<<", "<<s.position[1]<<", "<<s.position[2]<<endl;
-  //     cerr<<"sphere radius: "<<s.radius<<endl;
-  //     cerr<<"r2: "<<pow(s.radius, 2)<<endl;
-  // cerr<<"ray origin: "<<r.origin[0]<<", "<<r.origin[1]<<", "<<r.origin[2]<<endl;
-  // cerr<<"L: "<<L[0]<<", "<<L[1]<<", "<<L[2]<<endl;
-  // cerr<<"r.direction: "<<r.direction[0]<<", "<<r.direction[1]<<", "<<r.direction[2]<<endl;
-  // cerr<<"tca: "<<tca<<endl;
-  // cerr<<"L dot product:"<<dotProduct(L, L, 3)<<endl;
-  // cerr<<"d2: "<<d2<<endl;
-  //   cerr<<"thc: "<<thc<<endl;
-  //   cerr<<"t0: "<<t0<<endl;
-  //     cerr<<"pointHit: "<<pointHit[0]<<", "<<pointHit[1]<<", "<<pointHit[2]<<endl;
-  //     cerr<<"normalHit: "<<normalHit[0]<<", "<<normalHit[1]<<", "<<normalHit[2]<<endl;
       return true;
     }
     else{
@@ -334,8 +318,8 @@ color lighting(const light lights[], const int lightsToUse[], const sphere s, co
     col.b = min((float)1, s.m.ambient.b + s.m.diffuse.b * diffuse_sum[2] + s.m.specular.b * specular_sum[2]);
   }
   else{
-    col.r = 0; 
-    col.g = 0; 
+    col.r = 0;
+    col.g = 0;
     col.b = 0;
   }
   // cerr<<"sphere ambient: "<<s.m.ambient.r<<", "<<s.m.ambient.g<<", "<<s.m.ambient.b<<endl;
@@ -347,7 +331,7 @@ color lighting(const light lights[], const int lightsToUse[], const sphere s, co
 }
 
 ray computeReflectionRay(const ray r, const float normalHit[]){
-  ray reflection; 
+  ray reflection;
   reflection.direction[0] = r.direction[0] - 2 * normalHit[0] * dotProduct(r.direction, normalHit, 3);
   reflection.direction[1] = r.direction[1] - 2 * normalHit[1] * dotProduct(r.direction, normalHit, 3);
   reflection.direction[2] = r.direction[2] - 2 * normalHit[2] * dotProduct(r.direction, normalHit, 3);
@@ -365,10 +349,10 @@ color raytrace(const camera *c, const ray r, const sphere spheres[], const light
   float minDistance = FLT_MAX;
   sphere closestSphere;
   bool intersection = false;
-  color col; 
-  col.r = 0; 
-  col.g = 0; 
-  col.b = 0; 
+  color col;
+  col.r = 0;
+  col.g = 0;
+  col.b = 0;
   for(int i = 0; i < sphere_size; i++){
     if(intersect(r, spheres[i], pointHit, normalHit, &minDistance)){
       // cerr<<"hit"<<pointHit[0]<<", "<<pointHit[1]<<", "<<pointHit[2]<<endl;
@@ -383,14 +367,14 @@ color raytrace(const camera *c, const ray r, const sphere spheres[], const light
       lightsToUse[i] = 1;
     }
     bool shadow = false;
-    // if(depth < max_depth){
-    //   ray reflection = computeReflectionRay(r, normalHit);
-    //   color reflect_col; 
-    //   reflect_col =  raytrace(c, reflection, spheres, lights, sphere_size, lights_size, depth + 1, max_depth);
-    //   col.r += .8 * reflect_col.r;
-    //   col.g += .8 * reflect_col.g;
-    //   col.b += .8 * reflect_col.b;
-    // }
+    if(depth < max_depth){
+      ray reflection = computeReflectionRay(r, normalHit);
+      color reflect_col;
+      reflect_col =  raytrace(c, reflection, spheres, lights, sphere_size, lights_size, depth + 1, max_depth);
+      col.r += .8 * reflect_col.r;
+      col.g += .8 * reflect_col.g;
+      col.b += .8 * reflect_col.b;
+    }
     for(int i = 0; i < lights_size; i++){
       ray shadowRay;
       shadowRay.direction[0] = lights[i].position[0] - pointHit[0];
@@ -415,7 +399,7 @@ color raytrace(const camera *c, const ray r, const sphere spheres[], const light
     }
     color new_col = lighting(lights, lightsToUse, closestSphere, pointHit, normalHit, lights_size, c);
     col.r += new_col.r;
-    col.g += new_col.g; 
+    col.g += new_col.g;
     col.b += new_col.b;
     // pixel->r = 1;
     // pixel->g = 1;
@@ -423,4 +407,3 @@ color raytrace(const camera *c, const ray r, const sphere spheres[], const light
   }
   return col;
 }
-

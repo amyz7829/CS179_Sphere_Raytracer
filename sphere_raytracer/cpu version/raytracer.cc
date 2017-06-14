@@ -64,8 +64,6 @@ int main(int argc, char* argv[]){
           normalize(&r);
           // Changes the ray from world coordinates to
           cameraToWorld(c, &r);
-          // cerr<<"on pixel: ("<<i<<", "<<j<<")"<<endl;
-          // cerr<<"light color: "<<lights[0].c.r<<", "<<lights[0].c.g<<", "<<lights[0].c.b<<endl;
           pixels[i][j] = raytrace(c, r, spheres, lights, num_spheres, num_lights, 0, 3);
         }
       }
