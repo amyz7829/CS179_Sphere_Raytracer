@@ -1,0 +1,49 @@
+CPU Version:
+Compile with:
+g++ raytracer.cc raytracer_functions.cc -o raytracer
+
+Run with:
+./raytracer scene_file xres yres
+
+A scene file has the following format:
+camera
+position x y z
+direction x y z a
+near n
+far f
+left l
+right r
+top t
+bottom b
+
+spheres n
+position x y z
+radius r
+ambient r g b
+diffuse r g b
+specular r g b
+shininess s
+
+position x y z
+radius r
+ambient r g b
+diffuse r g b
+specular r g b
+shininess s
+
+(repeat until all spheres made)
+lights n
+position x y z
+color r g b
+k a
+
+position x y z
+color r g b
+k a
+(repeat until all lights made)
+
+As for the GPU version, Haru was down from at least Monday to Wednesday, preventing me from
+checking any of my GPU code. It has been commented, and uses a very similar structure to my CPU code.
+The primary difference is that the GPU code calculates each ray per pixel, and the uses the previous
+functions to calculate the color of that pixel. No particular improvements have been made except for
+using shared memory to store the objects and lights in the scene as those are used by every thread.
