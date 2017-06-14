@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <math.h>
 #include <sstream>
-#include <cuda_runtime.h>
 #include "raytracer.cuh"
 #include "ta_utilities.hpp"
 
