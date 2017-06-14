@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <math.h>
 #include <sstream>
-#include "ta_utilities.hpp"
 
 
 using namespace std;
